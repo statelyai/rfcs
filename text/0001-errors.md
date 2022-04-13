@@ -5,11 +5,11 @@
 
 ## Summary
 
-This RFC goes into how unhandled errors should affect the machine, its ancestry tree and even its current state. It also
+This RFC goes into how unhandled errors should affect the machine, its ancestry tree and even its current state.
 
 ## Motivation
 
-Proper error handling on the application level requires clear semantics around the libraries with which the given code interacts. Given that the XState owns a good chunk of code execution and it calls to users' code, it's often unclear how error handling should be implement. Or even how XState behaves when it encounters an uncaught error.
+Proper error handling on the application level requires clear semantics around the libraries with which the given code interacts. Given that the XState owns a good chunk of code execution and it calls to users' code, it's often unclear how error handling should be implemented. Or even how XState behaves when it encounters an uncaught error.
 
 This RFC aims to standardize our algorithm and approach for errors in a way that it could be documented for users, so they could know what to expect of XState in this regard.
 
