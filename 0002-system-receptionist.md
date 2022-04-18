@@ -229,6 +229,14 @@ This is _not_ required knowledge.
 - Blog post (discovering actors with receptionists)
 - Actor discovery guide
 
+
+## Use cases
+
+These examples may be contrived, but they should each serve a purpose to highlight challenges that the receptionist feature directly solves.
+
+- An orders actor is registered, and another actor subscribes to the `ORDERS_UPDATED` event. Rather than sending the giant payload of all orders through with the event, a smaller payload such as just the changed item could be sent. If an actor needs more data, `system.receptionist.find('orders').getSnapshot().context.list` could be used. 
+- Common info like auth or user profile data is often required across multiple machines, so referring to the auth/user actor context directly will be a direct line to the data. This should be more efficient than storing it all over the place and would keep queries up to date.
+
 ## Drawbacks
 
 This introduces two "new" concepts to XState - systems and receptionists - but it solves many common pain-points in managing and communicating with actors in a straightforward way. Both of these concepts are not new to the actor model, but the additional concepts can feel burdensome to devs who are trying to learn all of XState.
