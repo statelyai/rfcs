@@ -22,6 +22,7 @@ Naturally, actors form a hierarchical relationship, such that it is easiest for 
 - An actor communicating with a sibling actor
 - An actor communicating with any arbitrary actor
 - A system-level actor (such as a logging or notification actor) being made available to any actor
+- Retrieving non-stale data from another actor
 - Grouping actors
 - Communicating with groups of related actors
 
