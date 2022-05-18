@@ -1,4 +1,4 @@
-- **Start Date:** (fill me in with today's date, YYYY-MM-DD)
+- **Start Date:** (fill me in with today’s date, YYYY-MM-DD)
 - **RFC PR:** (leave this empty)
 
 # (RFC title goes here)
@@ -11,12 +11,12 @@
 
 > Why are we doing this? What use cases does it support?
 
-> Please provide specific examples. If you say "this would be more flexible" then
-> give an example of something that becomes easier. If you say "this would be make
-> it easier to do X" then give an example of what that looks like today and what's
+> Please provide specific examples. If you say “this would be more flexible” then
+> give an example of something that becomes easier. If you say “this would be make
+> it easier to do X” then give an example of what that looks like today and what’s
 > hard about it.
 
-> Don't assume that others recognize the problem is one that needs to be solved
+> Don’t assume that others recognize the problem is one that needs to be solved
 > Is there some concrete issue you cannot accomplish without this?
 > What does it look like to accomplish some set of goals today and how could
 > that be improved?
@@ -33,10 +33,10 @@
 
 ### Technical Background
 
-> There are a lot of ways Svelte is used. It's hosted on different platforms;
+> There are a lot of ways Svelte is used. It’s hosted on different platforms;
 > integrated with different libraries; built with different bundlers, etc. No one
 > person knows everything about all the ways Svelte is used. What does someone who
-> knows about Svelte but hasn't necessarily used anything outside of it need to
+> knows about Svelte but hasn’t necessarily used anything outside of it need to
 > know? Are there docs you can share?
 
 > How do different libraries or frameworks implement this feature? We can take
@@ -46,7 +46,7 @@
 ### Implementation
 
 > Explain the design in enough detail for somebody familiar with the framework to
-understand, and for somebody familiar with the implementation to implement. Any
+> understand, and for somebody familiar with the implementation to implement. Any
 > new terminology should be defined here.
 
 > Explain not just the final design, but also how you arrived at it. What
@@ -63,21 +63,21 @@ understand, and for somebody familiar with the implementation to implement. Any
 ## How we teach this
 
 > What names and terminology work best for these concepts and why? How is this
-idea best presented? As a continuation of existing Stately patterns, or as a
-wholly new one?
+> idea best presented? As a continuation of existing Stately patterns, or as a
+> wholly new one?
 
 > Would the acceptance of this proposal mean the Stately guides must be
-re-organized or altered? Does it change how Stately is taught to new users
-at any level?
+> re-organized or altered? Does it change how Stately is taught to new users
+> at any level?
 
 > How should this feature be introduced and taught to existing Stately
-users?
+> users?
 
 ## Drawbacks
 
 > Why should we *not* do this? Please consider the impact on teaching Stately,
-on the integration of this feature with other existing and planned features,
-on the impact of the API churn on existing apps, etc.
+> on the integration of this feature with other existing and planned features,
+> on the impact of the API churn on existing apps, etc.
 
 > There are tradeoffs to choosing any path, please attempt to identify them here.
 
@@ -90,4 +90,4 @@ on the impact of the API churn on existing apps, etc.
 
 ## Unresolved questions
 
-> Optional, but suggested for first drafts. What parts of the design are still TBD?
+> Optional, but suggested for first drafts. What parts of the design are still to be decided?
