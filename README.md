@@ -15,6 +15,8 @@ Our RFC process is inspired by the process adopted by [Svelte](https://github.co
 
 ## The process
 
+![Statechart representing the RFC process detailed below.](https://user-images.githubusercontent.com/266663/169092679-3f64947d-31e6-4e04-bdba-baf408dfd832.png) [View this statechart in the Stately editor](https://stately.ai/registry/editor/share/eee673df-9f4d-4965-beb8-1a649676521a)
+
 1. Fork the RFC repo at http://github.com/statelyai/rfcs
 2. Copy `0000-template.md` to `text/0000-my-feature.md`, where ‘my-feature’ is descriptive. Don’t assign an RFC number yet.
 3. Fill in the RFC. Put care into the details: **RFCs that do not present convincing motivation, demonstrate understanding of the impact of the design or are disingenuous about the drawbacks or alternatives tend to be poorly received.**
