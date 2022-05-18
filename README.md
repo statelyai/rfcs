@@ -16,7 +16,7 @@ Our RFC process is inspired by the process adopted by [Svelte](https://github.co
 ## The process
 
 1. Fork the RFC repo at http://github.com/statelyai/rfcs
-2. Copy 0000-template.md to text/0000-my-feature.md, where ‘my-feature’ is descriptive. Don’t assign an RFC number yet.
+2. Copy `0000-template.md` to `text/0000-my-feature.md`, where ‘my-feature’ is descriptive. Don’t assign an RFC number yet.
 3. Fill in the RFC. Put care into the details: **RFCs that do not present convincing motivation, demonstrate understanding of the impact of the design or are disingenuous about the drawbacks or alternatives tend to be poorly received.**
 4. Submit a pull request. As a pull request, the RFC will receive design feedback from the larger community, and the author should be prepared to revise their pull request in response.
 5. Build consensus and integrate feedback. RFCs with broad support are much more likely to make progress than those who don’t receive any comments.
