@@ -16,7 +16,7 @@
 > it easier to do X” then give an example of what that looks like today and what’s
 > hard about it.
 
-> Don’t assume that others recognize the problem is one that needs to be solved
+> Don’t assume others recognize the problem is one that needs to be solved
 > Is there some concrete issue you cannot accomplish without this?
 > What does it look like to accomplish some set of goals today and how could
 > that be improved?
@@ -33,15 +33,16 @@
 
 ### Technical Background
 
-> There are a lot of ways Svelte is used. It’s hosted on different platforms;
-> integrated with different libraries; built with different bundlers, etc. No one
-> person knows everything about all the ways Svelte is used. What does someone who
-> knows about Svelte but hasn’t necessarily used anything outside of it need to
-> know? Are there docs you can share?
+> There are a lot of ways XState and Stately tools are used. They’re hosted on 
+> different platforms; integrated with different libraries; built with different 
+> bundlers, etc. No one person knows everything about all the ways XState and the 
+> Stately tools are used. What does someone who knows about XState but hasn’t 
+> necessarily used anything outside of it need to know? Are there docs you can 
+> share?
 
 > How do different libraries or frameworks implement this feature? We can take
 > design inspiration from others who have done this well and improve upon the
-> designs or make them better fit Svelte.
+> designs or make them better fit XState.
 
 ### Implementation
 
@@ -50,10 +51,10 @@
 > new terminology should be defined here.
 
 > Explain not just the final design, but also how you arrived at it. What
-> constraints did you face? Are there corner cases you've come up with solutions for?
+> constraints did you face? Are there corner cases you’ve come up with solutions for?
 
 > Explain how your design fits into the larger picture. Are the other open problems
-> in this area you're familiar with? How does this design fit with potential
+> in this area you’re familiar with? How does this design fit with potential
 > solutions for those issues?
 
 > Connect your design to the motivations you listed above. When describing a part of
