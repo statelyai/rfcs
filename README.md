@@ -15,8 +15,10 @@ Our RFC process is inspired by the process adopted by [Svelte](https://github.co
 
 ## The process
 
+![Statechart representing the RFC process detailed below.](https://user-images.githubusercontent.com/266663/169092679-3f64947d-31e6-4e04-bdba-baf408dfd832.png) [View this statechart in the Stately editor](https://stately.ai/registry/editor/share/eee673df-9f4d-4965-beb8-1a649676521a)
+
 1. Fork the RFC repo at http://github.com/statelyai/rfcs
-2. Copy 0000-template.md to text/0000-my-feature.md, where ‘my-feature’ is descriptive. Don’t assign an RFC number yet.
+2. Copy `0000-template.md` to `text/0000-my-feature.md`, where ‘my-feature’ is descriptive. Don’t assign an RFC number yet.
 3. Fill in the RFC. Put care into the details: **RFCs that do not present convincing motivation, demonstrate understanding of the impact of the design or are disingenuous about the drawbacks or alternatives tend to be poorly received.**
 4. Submit a pull request. As a pull request, the RFC will receive design feedback from the larger community, and the author should be prepared to revise their pull request in response.
 5. Build consensus and integrate feedback. RFCs with broad support are much more likely to make progress than those who don’t receive any comments.
@@ -45,6 +47,7 @@ If you are interested in working on the implementation for an “active” RFC, 
 ## Reviewing RFCs
 
 We tend to do our thinking informally in the open when time allows. There are many community members relative to our small team who have many responsibilities. You can help ensure the team reviews your RFC in a timely manner by taking the time to consider the various details discussed in the template. It doesn’t scale to push the thinking onto a small number of core contributors. If reviewers raise an issue, don’t dismiss it as irrelevant; instead, provide additional examples or data and develop ways you could adapt the design in response. Sometimes answering a single question can be very time-consuming (such as setting up a benchmark), but discussions tend to stall out if concerns don’t get thoroughly addressed.
+<<<<<<< HEAD
 
 
 ## Commenting on RFCs
@@ -54,3 +57,5 @@ Good feedback is an essential part of the RFC process. The RFC author has put a 
 Helpful feedback includes:
 - Your real-life use cases that are related to the RFC. Would the RFC solve your use case? Is your use case close to the RFC but would remain unsolved by the proposed design?
 - Alternative designs or solutions that solve the same problems described in the RFC. If you have an alternative that may improve upon the RFC’s design, explain your reasoning while respecting the author’s chosen approach.
+=======
+>>>>>>> a0a5724478259a3ab1197c8a1700bcbb4dfcc0b1
