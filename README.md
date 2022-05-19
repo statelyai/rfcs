@@ -47,8 +47,6 @@ If you are interested in working on the implementation for an “active” RFC, 
 ## Reviewing RFCs
 
 We tend to do our thinking informally in the open when time allows. There are many community members relative to our small team who have many responsibilities. You can help ensure the team reviews your RFC in a timely manner by taking the time to consider the various details discussed in the template. It doesn’t scale to push the thinking onto a small number of core contributors. If reviewers raise an issue, don’t dismiss it as irrelevant; instead, provide additional examples or data and develop ways you could adapt the design in response. Sometimes answering a single question can be very time-consuming (such as setting up a benchmark), but discussions tend to stall out if concerns don’t get thoroughly addressed.
-<<<<<<< HEAD
-
 
 ## Commenting on RFCs
 
@@ -57,5 +55,3 @@ Good feedback is an essential part of the RFC process. The RFC author has put a 
 Helpful feedback includes:
 - Your real-life use cases that are related to the RFC. Would the RFC solve your use case? Is your use case close to the RFC but would remain unsolved by the proposed design?
 - Alternative designs or solutions that solve the same problems described in the RFC. If you have an alternative that may improve upon the RFC’s design, explain your reasoning while respecting the author’s chosen approach.
-=======
->>>>>>> a0a5724478259a3ab1197c8a1700bcbb4dfcc0b1
