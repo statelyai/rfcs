@@ -39,7 +39,7 @@ Snippets live in a `.code-snippets` file. We can include this file with our exte
 
 Snippets are a list of strings that will get inserted into a file when a prefix is typed and triggered. Each string can have placeholders that the user can cycle through and change.
 
-For XState snippets, we will include the relevant imports needed as the first string. Having imports in the first string works best if the user has enabled organizing imports on save. With that setting enabled, the imports are moved to the right place and merged with any existing imports on save.
+For XState snippets, we will include the relevant imports needed as the first string. Having imports in the first string works best if the user has [enabled organizing imports on save](https://community.vscodetips.com/tonyhicks20/automatically-organize-imports-346d). With that setting enabled, the imports are moved to the right place and merged with any existing imports on save.
 
 We provide a template for the part of the API relevant to the snippet for the subsequent strings.
 
