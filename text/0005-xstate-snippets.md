@@ -17,7 +17,7 @@ Snippets in VS Code are templates that make it easier to enter repeating code pa
 
 To help remember the snippets, we should prefix them so that they are easy to remember and don't clash with the code you typically write.
 
-Luckily, it doesn't seem typical to start code with `xs` (xstate), which could be our prefix.
+Luckily, it doesn't seem typical to start code with `xs` (**xs**tate), which could be our prefix.
 
 #### A few suggestions for snippets
 
