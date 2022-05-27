@@ -19,11 +19,17 @@ To help remember the snippets, we should prefix them so that they are easy to re
 
 Luckily, it doesn't seem typical to start code with `xs` (xstate), which could be our prefix.
 
-Here are a few suggestions for snippets:
+#### A few suggestions for snippets
+
 `xsm` - which would be short for XState Machine.
+![xsm](https://user-images.githubusercontent.com/167574/170657981-6b94717d-7629-44a4-92ac-9598f39967a7.gif)
+
 `xstm` - XState Typegen Machine.
-`xss` - XState State.
-`xsus` - XState useSelector.
+![xstm](https://user-images.githubusercontent.com/167574/170658001-c95e2b92-b37b-4db1-9b4a-4ef81f2e4b3c.gif)
+
+#### Other ideas for snippets
+- `xss` - XState State.
+- `xsus` - XState useSelector.
 
 ### Technical Background
 
