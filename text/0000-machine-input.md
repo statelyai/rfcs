@@ -126,7 +126,7 @@ interpret(greetingMachineWithInput).start();
 
 ### Technical Background
 
-The reason this was not implemented before is because SCXML does not define a separation between input data (params) and context data (datamodel). To provide "input data" to a statechart in SCXML, you provide [`<param>` values](https://www.w3.org/TR/scxml/#param) as [children inside of `<invoke>`](https://www.w3.org/TR/scxml/#N10FF5), which will overwrite the values in the `<datamodel>`.
+The reason this was not implemented before is because SCXML does not define a separation between input data (params) and context data (datamodel). To provide "input data" to a statechart in SCXML, you provide [`<param>` values](https://www.w3.org/TR/scxml/#param) as [children inside of `<invoke>`](https://www.w3.org/TR/scxml/#N10FF5), which will overwrite the values in the invokee's `<datamodel>`.
 
 The main problem with this is that there is no difference between datamodel values that should only be present at the initialization of a machine and those that can change (via `<assign>`) via transitions in the machine.
 
