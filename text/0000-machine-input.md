@@ -32,7 +32,7 @@ interpret(greetMachine.withContext({
 
 Problems:
 - Empty values need to be specified, since there is an _implicit_ expectation that these context values are available
-- No separation between "private" context and "public" context meant _only_ for input
+- No separation between "private" context and "public" context meant _only_ for input. There may be context values that should only be updated (and perhaps read) internally by the machine, and never "injected" into context from machine initialization.
 - Too easy to overwrite context values not intended to be overwritten
 - Context values may be invalid, especially when machine interpreted in dynamic environments where type checking is not available/forgotten
 - No indication of which properties are input properties
@@ -41,9 +41,14 @@ Problems:
 **Machine factory**
 
 ```js
-const createGreetMachine = (name) => createMachine({
-  entry: (ctx) => { console.log(`Hello, ${ctx.name}!`); }
-});
+const createGreetMachine = (name) => {
+  return createMachine({
+    entry: (ctx) => { console.log(`Hello, ${ctx.name}!`); }
+  });
+
+  // no guarantee that a different createMachine(...) won't be returned
+  // depending on arguments
+}
 
 interpret(createGreetMachine('David')).start();
 ```
@@ -74,7 +79,7 @@ greetService.send({ type: 'GREET.INPUT', name: 'David' });
 Problems:
 - Since this input event is bespoke, there is no built-in way of identifying input properties
 - Input event _must_ be first event sent; this is not guaranteed
-- Cannot use input data at semantic start of machine; e.g., not usable in `entry`
+- **Cannot use input data at semantic start of machine; e.g., not usable in `entry`**
 - No standard input event shape
 
 -----
@@ -113,14 +118,16 @@ const greetingMachine = createMachine({
 });
 
 // Non-interpreted environments
-const greetingMachineWithInput = greetingMachine
-  .withInput({ name: 'David' });
+const initialState = greetingMachine
+  .getInitialState({ name: 'David' });
 
-greetingMachineWithInput.initialState.event.data;
+initialState.event.data;
 // { name: 'David' }
 
 // Interpreted environments
-interpret(greetingMachineWithInput).start();
+interpret(greetingMachine, {
+  input: { name: 'David' }
+}).start();
 // logs 'Hello, David!'
 ```
 
@@ -141,15 +148,21 @@ interface InitEvent<TInputData> {
 }
 ```
 
-**`.withInput(...)` method**
-
-`machine.withInput(input)`
+**`machine.getInitialState(input)` method**
 
 Arguments:
 - `input`: the input data to include in the `data` property of the `InitEvent`
 
 Returns:
-- `machineWithInput`: a cloned `StateMachine` instance with the input data specified
+- `initialState`: The initial state of the machine where `initialState.event` is `{ type: 'xstate.init', data: input }`
+
+If `schema.input` is specified in the machine types and the `input` is not specified _or_ is the incorrect shape in `machine.getInitialState(input)`, this should be a type error.
+
+**`interpret(machine, { input })`**
+
+The `input` property would be added to interpreter options so that the input can be specified before the machine is interpreted.
+
+If `schema.input` is specified in the machine types and the `input` is not specified _or_ is the incorrect shape in `interpret(machine, { input })`, this should be a type error.
 
 ## How we teach this
 
@@ -169,15 +182,15 @@ TODO
 ## Unresolved questions
 
 - Should `data` be an optional property of `InitEvent`?
+  - No, default to empty object `{}`
 - Should we enforce at runtime that input data was passed in? If so, how?
 - Should input data instead be provided at interpretation time, rather than machine creation time (see below)?
+  - Yes, this is now part of `interpret(machine, { input })`, which internally does `machine.getInitialState(input)`
 
 ```js
 const greetMachine = createMachine({...});
 
-interpret(greetMachine)
-  .input({ name: 'David' })
-  .start();
-
-// .input() should _not_ be able to be called after starting service
+interpret(greetMachine, {
+  input: { name: 'David' }
+}).start();
 ```
