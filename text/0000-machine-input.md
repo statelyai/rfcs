@@ -164,6 +164,32 @@ The `input` property would be added to interpreter options so that the input can
 
 If `schema.input` is specified in the machine types and the `input` is not specified _or_ is the incorrect shape in `interpret(machine, { input })`, this should be a type error.
 
+**Remove `machine.withContext({...})`
+
+We would also deprecate (v4) and remove (v5) the `machine.withContext(context)` method to encourage merging of outside data with inner context, which can easily lead to impossible states.
+
+```diff
+ const machine2 = machine
+-  .withContext(input);
+ 
+-machine.initialState();
++machine.getInitialState(input);
+```
+
+**Input in lazy initial context**
+
+Instead of `machine.withContext(...)`, we would provide the input data in the `input` property of lazy context:
+
+```js
+const machine = createMachine({
+  context: ({ input }) => ({
+    greetee: input.name,
+    other: 'data',
+    thisShould: ['be', 'isolated']
+  })
+});
+```
+
 ## How we teach this
 
 - As a better alternative to `machine.withContext({...})`, which as been confusing for many
