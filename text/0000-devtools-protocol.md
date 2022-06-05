@@ -121,6 +121,8 @@ The client sends an `'@xstate/inspect.connect'` message to the inspector (e.g. v
 
 as the inspector will adapt that message to include the `actorRef` for responding.
 
+-----
+
 - **`@xstate/inspect.connected`** (Inspector -> Client)
 
 ```ts
@@ -130,6 +132,8 @@ interface XStateInspectConnectedEvent {
 ```
 
 The inspector sends back an `'@xstate/inspect.connected'` message to the client to signal that a connection has been established. The client can use the lack of this message to retry listening, or perform some custom behavior after a timeout.
+
+-----
 
 - **`@xstate/inspect.actors`** (Inspector -> Client)
 ```ts
@@ -149,6 +153,8 @@ interface XStateInspectActorsEvent {
 
 Upon connection, the inspector also sends an `'@xstate/inspect.actors'` message, which includes all the current information on inspected actors. This is useful for the client being able to visualize the actor hierarchy and/or list of actors even when the client has connected late.
 
+-----
+
 - **`@xstate/inspect.actor`** (Inspector -> Client)
 
 ```ts
@@ -161,6 +167,8 @@ interface XStateInspectActorEvent {
 ```
 
 When an actor is registered, connected clients are notified of its existence. An actor may or may not be a state machine actor; if they are, the state machine definition (JSON-stringified) is provided.
+
+-----
 
 - **`@xstate/inspect.update`** (Inspector -> Client)
 
@@ -175,6 +183,8 @@ interface XStateInspectUpdateEvent {
 ```
 
 When an actor's snapshot updates due to a state transition, the client is notified via an `'@xstate/inspect.update'` message. The status signifies whether the actor is not yet started, started, or stopped. The client may choose to perform some cleanup behavior when the actor stops.
+
+-----
 
 - **`@xstate/inspect.send`** (Client -> Inspector)
 
