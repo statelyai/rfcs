@@ -9,91 +9,155 @@ The `schema` property in the machine config is used to provide strong types thro
 
 ## Motivation
 
-> Why are we doing this? What use cases does it support?
-
-> Please provide specific examples. If you say “this would be more flexible” then
-> give an example of something that becomes easier. If you say “this would be make
-> it easier to do X” then give an example of what that looks like today and what’s
-> hard about it.
-
-> Don’t assume others recognize the problem is one that needs to be solved
-> Is there some concrete issue you cannot accomplish without this?
-> What does it look like to accomplish some set of goals today and how could
-> that be improved?
-> Are there any workarounds that are necessary today?
-> Are there open issues on Github where people would be helped by this?
-> Will the change have performance impacts? Can you quantify them?
-
-> Please focus on explaining the motivation so that if this RFC is not accepted,
-> the motivation could be used to develop alternative solutions. In other words,
-> enumerate the constraints you are trying to solve without coupling them too
-> closely to the solution you have in mind.
+WIP
 
 ## Detailed design
 
 ### Technical Background
 
-> There are a lot of ways XState and Stately tools are used. They’re hosted on 
-> different platforms; integrated with different libraries; built with different 
-> bundlers, etc. No one person knows everything about all the ways XState and the 
-> Stately tools are used. What does someone who knows about XState but hasn’t 
-> necessarily used anything outside of it need to know? Are there docs you can 
-> share?
-
-> How do different libraries or frameworks implement this feature? We can take
-> design inspiration from others who have done this well and improve upon the
-> designs or make them better fit XState.
+WIP
 
 ### Implementation
 
+**Creating a schema**
+
 ```ts
+import { createSchema } from 'xstate';
+
+const schema = createSchema({
+  context: {} as SomeContext,
+  events: {} as SomeEvents,
+  actions: {} as SomeActions,
+  guards: {} as SomeGuards,
+  delays: {} as SomeDelays,
+  actors: {
+    someSource: {} as SomeActor,
+    anotherSource: {} as AnotherActor,
+    // ...
+  },
+  children: {
+    first: {} as FirstActor,
+    second: {} as SecondActor,
+    // ...
+  }
+});
+
 const machine = createMachine({
   context: {
     // ... initial context
   } as SomeContext,
-  schema: {
-    events: {} as SomeEvents,
-    actions: {} as SomeActions,
-    guards: {} as SomeGuards,
-    delays: {} as SomeDelays,
-    actors: {} as SomeActors,
-    children: {
-      first: {} as FirstActor,
-      second: {} as SecondActor
-    }
-  },
+  schema,
   // ...
 });
-```0
+```
+
+**Actions**
+
+The `actions` types provided in the schema will be available for:
+
+- State `entry: [ ... ]`
+- State `exit: [ ... ]`
+- Transition `actions: [ ... ]`
+- Implementation `actions: { ... }`
+
+**Guards**
+
+The `guards` types provided in the schema will be available for:
+
+- Transition `guard: ...`
+- Implementation `guards: { ... }`
+
+**Delays**
+
+The `delays` types provided in the schema will be available for:
+
+- State `after: { ... }`:
+
+```ts
+after: {
+  // Autocompleted
+  namedDelay: {/* ... */}
+}
+```
+
+```ts
+after: [
+  // Autocompleted
+  { delay: 'namedDelay', /* ... */ }
+]
+```
+
+**Actors**
+
+The `actors` types provided in the schema will be available for:
+
+- Assignment `spawn(...)` calls:
+
+  ```ts
+  actions: assign({   
+    thing: (_ctx, _e, { spawn }) => {
+      // Autocompleted
+      return spawn('namedActor', /* ... */)
+    }
+  })
+  ```
+
+- Invocations (by source):
+
+```ts
+invoke: {
+  // Autocompleted
+  src: 'namedActor',
+  onDone: {
+    actions: (ctx, event) => {
+      // event.data strongly typed from actor schema type
+    }
+  }
+}
+```
+
+**Children**
+
+The `children` types provided in the schema will be available for:
+
+- Invocations (by ID):
+
+```ts
+invoke: {
+  // Autocompleted
+  id: 'namedChild',
+  // Autocompleted and type-checked to ensure it is compatible
+  // with the specified child actor type(s)
+  src: 'someSource'
+}
+```
+
+- Sending to actors:
+
+```ts
+// Autocompleted
+actions: sendTo('namedChild', (ctx, event) => {
+  // Strongly typed to events actor can receive
+  return {/* ... */}
+})
+```
 
 ## How we teach this
 
-> What names and terminology work best for these concepts and why? How is this
-> idea best presented? As a continuation of existing Stately patterns, or as a
-> wholly new one?
+Documentation
 
-> Would the acceptance of this proposal mean the Stately guides must be
-> re-organized or altered? Does it change how Stately is taught to new users
-> at any level?
-
-> How should this feature be introduced and taught to existing Stately
-> users?
+WIP
 
 ## Drawbacks
 
-> Why should we *not* do this? Please consider the impact on teaching Stately,
-> on the integration of this feature with other existing and planned features,
-> on the impact of the API churn on existing apps, etc.
-
-> There are tradeoffs to choosing any path, please attempt to identify them here.
+WIP
 
 ## Alternatives
 
-> What other designs have been considered? What is the impact of not doing this?
+- Specifying types in generics
 
-> This section could also include prior art, that is, how other frameworks in the
-> same domain have solved this problem differently.
+WIP
 
 ## Unresolved questions
 
-> Optional, but suggested for first drafts. What parts of the design are still to be decided?
+- Which types are specified as a mapping, and which are not?
