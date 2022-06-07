@@ -204,6 +204,8 @@ exit: (context, event, { system, self }) => {
 }
 ```
 
+When an actor stops, it should be automatically unregistered. When the system stops, all actors should be unregistered.
+
 ## How we teach this
 
 **New concepts:**
