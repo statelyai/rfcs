@@ -9,13 +9,13 @@ This RFC outlines the protocol for XState DevTools; specifically, it outlines th
 
 ## Motivation
 
-TODO
+The motivation of this RFC is to create a unified protocol for an **inspector** to communicate with a devtools **client**, whether the client lives as a browser devtools extension or an electron app or even a remote server.
 
 ## Detailed design
 
 ### Technical Background
 
-TODO
+See the current protocol here: https://xstate.js.org/docs/packages/xstate-inspect/#implementing 
 
 ### Implementation
 
@@ -155,6 +155,18 @@ Upon connection, the inspector also sends an `'@xstate/inspect.actors'` message,
 
 -----
 
+- **`@xstate/inspect.read`** (Client -> Inspector)
+
+The client can also request an `'@xstate/inspect.actors'` event to be sent to it by sending an `'@xstate/inspect.read'` event. This is useful if the client goes out-of-sync.
+
+```ts
+interface XStateInspectReadEvent {
+  type: '@xstate/inspect.read';
+}
+```
+
+-----
+
 - **`@xstate/inspect.actor`** (Inspector -> Client)
 
 ```ts
@@ -196,6 +208,8 @@ interface XStateInspectSendEvent {
   createdAt: number;
 }
 ```
+
+
 
 The client may send events directly to inspected actors.
 
