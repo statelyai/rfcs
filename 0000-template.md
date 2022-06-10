@@ -33,11 +33,11 @@
 
 ### Technical Background
 
-> There are a lot of ways XState and Stately tools are used. They’re hosted on 
-> different platforms; integrated with different libraries; built with different 
-> bundlers, etc. No one person knows everything about all the ways XState and the 
-> Stately tools are used. What does someone who knows about XState but hasn’t 
-> necessarily used anything outside of it need to know? Are there docs you can 
+> There are a lot of ways XState and Stately tools are used. They’re hosted on
+> different platforms; integrated with different libraries; built with different
+> bundlers, etc. No one person knows everything about all the ways XState and the
+> Stately tools are used. What does someone who knows about XState but hasn’t
+> necessarily used anything outside of it need to know? Are there docs you can
 > share?
 
 > How do different libraries or frameworks implement this feature? We can take
@@ -73,6 +73,12 @@
 
 > How should this feature be introduced and taught to existing Stately
 > users?
+
+## How do we type this
+
+> Especially if the RFC proposes adding/changing a runtime feature of the XState itself
+> we should think about strong typing. Can the feature be strictly typed? If yes, is it complicated?
+> Can a proof of concept be prepared on the [TS playground](https://www.typescriptlang.org/play)?
 
 ## Drawbacks
 
