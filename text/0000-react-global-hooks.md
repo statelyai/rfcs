@@ -7,6 +7,8 @@
 
 This RFC seeks to establish a simple way to create hooks for global actors (instances of XState machines) that can be accessed in any component. This will allow for shared state patterns, similar to Redux, Zustand, Recoil, and others, without the need for React context providers. Shared state is a very common use-case for non-trivial React applications, and this would enable state machines to be used at any level: component and/or app-wide (global) state with ease.
 
+**See the PR:** https://github.com/statelyai/xstate/pull/3401
+
 ## Motivation
 
 TODO
@@ -25,7 +27,7 @@ import { createHooks } from '@xstate/react';
 import { authMachine } from './authMachine';
 import { interpret } from 'xstate';
 
-// Interpret the machine first (full interpretation control)
+// Create the actor
 const authService = interpret(authMachine, {/* ... */}).start();
 
 // Create a "hooks object" from the actor
@@ -45,6 +47,7 @@ const SomeForm = () => {
 ```
 
 **Details**
+
 ```js
 import { createHooks } from '@xstate/react';
 import { authMachine } from './authMachine';
@@ -65,12 +68,54 @@ const [state, send] = auth.useActor();
 const derivedState = auth.useSelector(selectorFn, comparator);
 ```
 
+**Actor initialization control**
+
+Developers have full control over when the actor is started:
+
+```js
+// ...
+
+// Actor not started yet
+const authService = interpret(authMachine, {/* ... */});
+const auth = createHooks(authService);
+
+const App = () => {
+  // If you must start the actor in a useEffect...
+  useEffect(() => {
+    auth.actorRef.start();
+
+    // Since it's a global actor, no need for cleanup
+  }, []);
+
+  const [state, send] = auth.useActor();
+
+  // ...
+}
+```
+
+```js
+// ...
+
+// Actor not started yet
+const authService = interpret(authMachine, {/* ... */});
+const auth = createHooks(authService);
+
+// Only start in browser
+if (typeof window !== undefined) {
+  auth.actorRef.start();
+}
+
+const App = () => {
+  const [state, send] = auth.useActor();
+
+  // ...
+}
+```
+
 
 ### Technical Background
 
 This builds on two existing hooks: `useActor()` and `useSelector()`.
-
-TODO
 
 ### Implementation
 
