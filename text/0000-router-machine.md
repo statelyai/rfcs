@@ -10,10 +10,15 @@ Using XState as a router is one of the most frequently requested use-cases. Wher
 This RFC seeks to extend state node definitions with meta data for routing, which can be consumed by a 3rd-party routing library, and also used within the statechart itself to specify that a state can be transitioned to from any other state, which is a valid use-case.
 
 ```tsx
-const routerMachine = createRouterMachine({
+import { createMachine } from 'xstate';
+
+const routerMachine = createMachine({
   initial: 'home',
   states: {
     home: {
+      // A route object signifies that a state
+      // can be navigated to via sending the
+      // `navigateTo(...)`event creator
       route: { path: '/' },
     },
     login: {
@@ -81,21 +86,35 @@ const routeData = routerMachine.parse('/items/123?details');
 //     details: true
 //   }
 // }
+```
 
-const linkState = routerMachine.to({
-  path: '/checkout/shipping',
-});
+```tsx
+import {
+  getStateFromRoute,
+  getRouteFromState,
+  syncWithHistory,
+} from 'xstate/router';
+
+const shippingState = getStateFromRoute(routerMachine, '/checkout/shipping');
+
+const shippingRoute = getRouteFromState(shippingState);
 
 // Adding to JSX
-<a href={linkState.path}>Continue to shipping</a>;
-<Link to={linkState.path}>Continue to shipping</Link>;
+<a href={shippingRoute}>Continue to shipping</a>;
+<Link to={shippingRoute}>Continue to shipping</Link>;
 
-const billingState = routerMachine.transition(linkState, { type: 'next' });
+const billingState = routerMachine.transition(shippingState, { type: 'next' });
 
-// Interpreting
-const routerActor = routerMachine.interpret({ history }).start();
+// Syncing to history
+const routerActor = interpret(routerMachine).start();
 
+syncToHistory(routerActor, window.history);
+
+// Calls `history.push(...)`
 routerActor.send({ type: 'next' });
+
+// Syncs machine state to URL
+window.history.back();
 ```
 
 ```tsx
@@ -125,9 +144,10 @@ routerActor.send(
 ```tsx
 import * as React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { createRouterMachine } from '@xstate/router';
+import { createMachine } from 'xstate';
+import { getRoutes } from 'xstate/router';
 
-const routerMachine = createRouterMachine({
+const routerMachine = createMachine({
   initial: 'home',
   states: {
     home: {
@@ -158,10 +178,8 @@ const routerMachine = createRouterMachine({
 });
 
 function App() {
-  let element = useRoutes(routerMachine.routes);
-  const routerActor = useInterpret(routerMachine, {
-    services: { history },
-  });
+  let element = useRoutes(getRoutes(routerMachine));
+  const routerActor = useInterpret(routerMachine);
 
   routerActor.send('viewTasks');
 
