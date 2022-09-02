@@ -28,6 +28,7 @@ interface InspectedEventObject {
   name: string; // Event type
   data: AnyEventObject; // The actual event object
   origin?: string; // Session ID
+  destination: string; // Session ID
   createdAt: number; // Timestamp
 }
 
@@ -195,6 +196,19 @@ interface XStateInspectUpdateEvent {
 ```
 
 When an actor's snapshot updates due to a state transition, the client is notified via an `'@xstate/inspect.update'` message. The status signifies whether the actor is not yet started, started, or stopped. The client may choose to perform some cleanup behavior when the actor stops.
+
+-----
+
+- **`@xstate/inspect.event`** (Inspector -> Client)
+
+```ts
+interface XStateInspectMessageEvent {
+  type: '@xstate/inspect.message';
+  event: InspectedEventObject; // includes origin and destination
+}
+```
+
+When an actor sends a message to another actor, the client is notified via an `'@xstate/inspect.message'` event. The `event` should contain both the `origin` (if known) and the `destination` (required) as session IDs.
 
 -----
 
