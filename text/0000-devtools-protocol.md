@@ -202,8 +202,8 @@ When an actor's snapshot updates due to a state transition, the client is notifi
 - **`@xstate/inspect.event`** (Inspector -> Client)
 
 ```ts
-interface XStateInspectMessageEvent {
-  type: '@xstate/inspect.message';
+interface XStateInspectEventEvent {
+  type: '@xstate/inspect.event';
   event: InspectedEventObject; // includes origin and destination
 }
 ```
