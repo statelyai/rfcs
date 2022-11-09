@@ -10,8 +10,8 @@ Actor discovery is an important part of the actor model. This RFC proposes the f
 - The creation of an actor system via `createSystem(...)` 
 - A system receptionist via `system.receptionist`
 - Receptionist actions:
-  - Registering an actor ref: `register(key)`
-  - Unregistering an actor ref: `unregister(key)`
+  - Registering an actor ref
+  - Unregistering an actor ref
 
 ## Motivation
 
@@ -58,24 +58,27 @@ system.start();
 
 **Registering to the receptionist**
 
-The `register(key)` action is made available from `'xstate/actions'`, which will register the executing actor to the system-wide registry under that `key`. Multiple actors can be registered under the same `key` by default, and it should be assumed that each `key` in the registry has 0 or more actor refs.
+The parent actor is responsible for registering actors that it spawns/invokes under a registry key:
 
 ```ts
-import { register } from 'xstate/actions';
-
 const todoMachine = createMachine({
-  // Register actor to the 'todo' key
-  entry: register('todo'),
   // ...
 });
-```
 
-This should be roughly equivalent to:
-```ts
-// PSEUDOCODE
-entry: (ctx, e, { system, self }) => {
-  system.register('todo', self);
-}
+const todosMachine = createMachine({
+  on: {
+    'todo.create': {
+      actions: assign({
+        newTodo: (ctx, e, { spawn }) => {
+          return spawn(todoMachine, {
+            id: `todo-${/* unique id */}`,
+            register: 'todo' // multiple actors can be registered here
+          })
+        }
+      })
+    }
+  }
+})
 ```
 
 **Getting listings**
