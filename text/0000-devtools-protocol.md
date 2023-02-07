@@ -24,44 +24,37 @@ See the current protocol here: https://xstate.js.org/docs/packages/xstate-inspec
 `globalThis.__xstate__` is a global `XStateDevInterface` object:
 
 ```ts
-interface InspectedEventObject {
-  name: string; // Event type
-  data: AnyEventObject; // The actual event object
-  origin?: string; // Session ID
-  destination: string; // Session ID
-  createdAt: number; // Timestamp
-}
-
 interface InspectedActorObject {
   actorRef: AnyActorRef;
   sessionId: string;
   parent?: string; // Session ID
-  snapshot: any; 
+  updates: ActorUpdate[];
   machine?: StateMachineDefinition; // This is originally StateNodeDefinition (renaming)
-  events: InspectedEventObject[];
   createdAt: number; // Timestamp
-  updatedAt: number; // Timestamp
-  status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped
+  updatedAt: number; // Timestamp, derived from latest update createdAt
+  status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped, derived from latest update status
 }
 
 interface ActorUpdate {
   sessionId: string;
   actorRef: AnyActorRef;
   snapshot: any;
-  event: InspectedEventObject;
+  event: EventObject; // { type: string, ... }
+  origin?: string; // Session ID
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped
+  createdAt: number; // Timestamp
 }
 
 interface ActorRegistration {
   actorRef: AnyActorRef;
   sessionId: string;
+  parent?: string;
   machine?: StateMachineDefinition;
-  createdAt: number;
+  createdAt: number; // Timestamp
 }
 
 export interface XStateDevInterface {
   register: (actorRef: AnyActorRef) => void;
-  unregister: (actorRef: AnyActorRef) => void;
   onRegister: (
     listener: (actorRegistration: ActorRegistration) => void
   ) => Subscription;
@@ -77,7 +70,7 @@ Differences from XState v4:
 ```diff
  export interface XStateDevInterface {
    register: ...
-   unregister: ...
+-  unregister: ...
    onRegister: () => ...
 -  services: ...
 +  actors: { ... }
@@ -85,13 +78,12 @@ Differences from XState v4:
  }
 ```
 
-- `onRegister()` provides listeners wtih `ActorRegistration` objects, which include:
+- `onRegister()` provides listeners with `ActorRegistration` objects, which include:
   - The `actorRef` reference to the actor
   - The `sessionId` of the actor ref
   - The `machine` JSON-serializable state machine definition if the actor was created from a machine
   - The `createdAt` timestamp
 - `services` is removed and replaced by `actors`, which is a mapping of session IDs to `InspectedActorObject` objects and can be services from machines or other actors.
-- `InspectedEventObject` is introduced to include metadata about the event, such as its `origin` and timestamp (`createdAt`). This is similar to `SCXML.EventObject`.
 - `onUpdate()` provides listeners with `ActorUpdate` objects, which include:
   - The `sessionId` of the updated actor
   - The `actorRef` reference to the actor
