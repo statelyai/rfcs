@@ -27,9 +27,10 @@ See the current protocol here: https://xstate.js.org/docs/packages/xstate-inspec
 interface InspectedActorObject {
   actorRef: AnyActorRef;
   sessionId: string;
-  parent?: string; // Session ID
-  updates: ActorEvent[];
-  machine?: StateMachineDefinition; // This is originally StateNodeDefinition (renaming)
+  parentId?: string; // Session ID
+  systemId?: string;
+  events: ActorEvent[];
+  definition?: string; // JSON-stringified machine definition or URL
   createdAt: number; // Timestamp
   updatedAt: number; // Timestamp, derived from latest update createdAt
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped, derived from latest update status
@@ -50,7 +51,7 @@ interface ActorRegistration {
   actorRef: AnyActorRef;
   sessionId: string;
   parent?: string;
-  machine?: StateMachineDefinition;
+  definition?: StateMachineDefinition;
   createdAt: number; // Timestamp
 }
 
@@ -138,7 +139,7 @@ interface XStateInspectActorsEvent {
       sessionId: string;
       parent?: string; // Session ID
       machine?: string; // JSON-stringified
-      updates: ActorEvent[];
+      events: ActorEvent[];
       createdAt: number; // Timestamp
     }
   };
