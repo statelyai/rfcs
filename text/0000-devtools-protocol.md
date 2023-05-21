@@ -28,19 +28,20 @@ interface InspectedActorObject {
   actorRef: AnyActorRef;
   sessionId: string;
   parent?: string; // Session ID
-  updates: ActorUpdate[];
+  updates: ActorEvent[];
   machine?: StateMachineDefinition; // This is originally StateNodeDefinition (renaming)
   createdAt: number; // Timestamp
   updatedAt: number; // Timestamp, derived from latest update createdAt
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped, derived from latest update status
 }
 
-interface ActorUpdate {
+interface ActorEvent {
+  id: string; // unique string for this actor update
   sessionId: string;
   actorRef: AnyActorRef;
   snapshot: any;
   event: AnyEventObject; // { type: string, ... }
-  origin?: string; // Session ID
+  sourceId?: string; // Session ID
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped
   createdAt: number; // Timestamp
 }
@@ -61,7 +62,7 @@ export interface XStateDevInterface {
   actors: {
     [sessionId: string]: InspectedActorObject;
   };
-  onUpdate: (listener: (update: ActorUpdate) => void) => Subscription;
+  onUpdate: (listener: (update: ActorEvent) => void) => Subscription;
 }
 ```
 
@@ -84,7 +85,7 @@ Differences from XState v4:
   - The `machine` JSON-serializable state machine definition if the actor was created from a machine
   - The `createdAt` timestamp
 - `services` is removed and replaced by `actors`, which is a mapping of session IDs to `InspectedActorObject` objects and can be services from machines or other actors.
-- `onUpdate()` provides listeners with `ActorUpdate` objects, which include:
+- `onUpdate()` provides listeners with `ActorEvent` objects, which include:
   - The `sessionId` of the updated actor
   - The `actorRef` reference to the actor
   - The `snapshot`, which is the latest observable state of the actor
@@ -137,7 +138,7 @@ interface XStateInspectActorsEvent {
       sessionId: string;
       parent?: string; // Session ID
       machine?: string; // JSON-stringified
-      updates: ActorUpdate[];
+      updates: ActorEvent[];
       createdAt: number; // Timestamp
     }
   };
@@ -183,7 +184,7 @@ interface XStateInspectUpdateEvent {
   sessionId: string;
   snapshot: string; // JSON-stringified snapshot
   event: AnyEventObject; // JSON-stringified
-  origin?: string; // Session ID
+  sourceId?: string; // Session ID
   status: 0 | 1 | 2; // Actor status
 }
 ```
