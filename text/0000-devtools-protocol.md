@@ -38,60 +38,32 @@ interface InspectedActorObject {
 
 interface ActorEvent {
   id: string; // unique string for this actor update
-  sessionId: string;
-  actorRef: AnyActorRef;
   snapshot: any;
   event: AnyEventObject; // { type: string, ... }
-  sourceId?: string; // Session ID
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped
-  createdAt: number; // Timestamp
+  sessionId: string; 
+  actorRef: AnyActorRef; // Only available locally
+  sourceId?: string; // Session ID
+  createdAt: string; // Timestamp
 }
 
-interface ActorRegistration {
+interface ActorRegistrationEvent {
   actorRef: AnyActorRef;
   sessionId: string;
-  parent?: string;
+  parentId?: string;
   definition?: StateMachineDefinition;
-  createdAt: number; // Timestamp
+  createdAt: string; // Timestamp
 }
 
-export interface XStateDevInterface {
-  register: (actorRef: AnyActorRef) => void;
-  onRegister: (
-    listener: (actorRegistration: ActorRegistration) => void
-  ) => Subscription;
-  actors: {
-    [sessionId: string]: InspectedActorObject;
-  };
-  onUpdate: (listener: (update: ActorEvent) => void) => Subscription;
-}
+export type InspectorActorRef = ActorRef<ActorEvent | ActorRegistrationEvent>;
 ```
 
 Differences from XState v4:
 
-```diff
- export interface XStateDevInterface {
-   register: ...
--  unregister: ...
-   onRegister: () => ...
--  services: ...
-+  actors: { ... }
-+  onUpdate: { ... }
- }
-```
+Instead of `XStateDevInterface`, there is the `InspectorActorRef` which can receive `ActorEvent` or `ActorRegistrationEvent` events.
 
-- `onRegister()` provides listeners with `ActorRegistration` objects, which include:
-  - The `actorRef` reference to the actor
-  - The `sessionId` of the actor ref
-  - The `machine` JSON-serializable state machine definition if the actor was created from a machine
-  - The `createdAt` timestamp
-- `services` is removed and replaced by `actors`, which is a mapping of session IDs to `InspectedActorObject` objects and can be services from machines or other actors.
-- `onUpdate()` provides listeners with `ActorEvent` objects, which include:
-  - The `sessionId` of the updated actor
-  - The `actorRef` reference to the actor
-  - The `snapshot`, which is the latest observable state of the actor
-  - The `event` as an `InspectedEventObject` which caused the update
-  - The `status` of the actor: 0 = not started, 1 = started, 2 = stopped
+- The `ActorEvent` event is sent to the inspector when an actor's state changes.
+- The `ActorRegistrationEvent` event is sent to the inspector when an actor is registered.
 
 **Messages**
 
@@ -168,8 +140,8 @@ interface XStateInspectReadEvent {
 interface XStateInspectActorEvent {
   type: '@xstate/inspect.actor';
   sessionId: string;
-  machine?: string; // JSON-stringified machine definition
-  createdAt: number;
+  definition?: string; // JSON-stringified machine definition or URL
+  createdAt: string;
 }
 ```
 
