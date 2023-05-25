@@ -28,7 +28,7 @@ interface InspectedActorObject {
   actorRef: AnyActorRef; // local-only
   sessionId: string;
   parentId?: string; // Session ID
-  systemId?: string;
+  systemId?: string; // Session ID
   events: ActorTransition[];
   definition?: string; // JSON-stringified machine definition or URL
   createdAt: number; // Timestamp
