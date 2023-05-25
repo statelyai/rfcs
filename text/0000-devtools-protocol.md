@@ -29,14 +29,14 @@ interface InspectedActorObject {
   sessionId: string;
   parentId?: string; // Session ID
   systemId?: string; // Session ID
-  events: ActorTransition[];
+  events: ActorCommunicationEvent[]; // events where targetId === sessionId
   definition?: string; // JSON-stringified machine definition or URL
   createdAt: number; // Timestamp
   updatedAt: number; // Timestamp, derived from latest update createdAt
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped, derived from latest update status
 }
 
-interface ActorTransition {
+interface ActorTransitionEvent {
   id: string; // unique string for this actor update
   snapshot: any;
   event: AnyEventObject; // { type: string, ... }
@@ -44,6 +44,14 @@ interface ActorTransition {
   sessionId: string; 
   actorRef: AnyActorRef; // Only available locally
   sourceId?: string; // Session ID
+  createdAt: string; // Timestamp
+}
+
+interface ActorCommunicationEvent {
+  id: string; // unique string for this event
+  event: AnyEventObject; // { type: string, ... }
+  sourceId?: string; // Session ID
+  targetId: string; // Session ID, required
   createdAt: string; // Timestamp
 }
 
@@ -56,14 +64,14 @@ interface ActorRegistrationEvent {
   createdAt: string; // Timestamp
 }
 
-export type InspectorActorRef = ActorRef<ActorTransition | ActorRegistrationEvent>;
+export type InspectorActorRef = ActorRef<ActorTransitionEvent | ActorRegistrationEvent>;
 ```
 
 Differences from XState v4:
 
-Instead of `XStateDevInterface`, there is the `InspectorActorRef` which can receive `ActorTransition` or `ActorRegistrationEvent` events.
+Instead of `XStateDevInterface`, there is the `InspectorActorRef` which can receive `ActorTransitionEvent` or `ActorRegistrationEvent` events.
 
-- The `ActorTransition` event is sent to the inspector when an actor's state changes.
+- The `ActorTransitionEvent` event is sent to the inspector when an actor's state changes.
 - The `ActorRegistrationEvent` event is sent to the inspector when an actor is registered.
 
 **Messages**
@@ -112,7 +120,7 @@ interface XStateInspectActorsEvent {
       sessionId: string;
       parent?: string; // Session ID
       machine?: string; // JSON-stringified
-      events: ActorTransition[];
+      events: ActorTransitionEvent[];
       createdAt: number; // Timestamp
     }
   };
