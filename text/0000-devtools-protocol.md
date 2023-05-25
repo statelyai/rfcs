@@ -25,18 +25,18 @@ See the current protocol here: https://xstate.js.org/docs/packages/xstate-inspec
 
 ```ts
 interface InspectedActorObject {
-  actorRef: AnyActorRef;
+  actorRef: AnyActorRef; // local-only
   sessionId: string;
   parentId?: string; // Session ID
   systemId?: string;
-  events: ActorEvent[];
+  events: ActorTransition[];
   definition?: string; // JSON-stringified machine definition or URL
   createdAt: number; // Timestamp
   updatedAt: number; // Timestamp, derived from latest update createdAt
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped, derived from latest update status
 }
 
-interface ActorEvent {
+interface ActorTransition {
   id: string; // unique string for this actor update
   snapshot: any;
   event: AnyEventObject; // { type: string, ... }
@@ -52,18 +52,18 @@ interface ActorRegistrationEvent {
   sessionId: string;
   parentId?: string;
   systemId?: string;
-  definition?: StateMachineDefinition;
+  definition?: string; // JSON-stringified definition or URL
   createdAt: string; // Timestamp
 }
 
-export type InspectorActorRef = ActorRef<ActorEvent | ActorRegistrationEvent>;
+export type InspectorActorRef = ActorRef<ActorTransition | ActorRegistrationEvent>;
 ```
 
 Differences from XState v4:
 
-Instead of `XStateDevInterface`, there is the `InspectorActorRef` which can receive `ActorEvent` or `ActorRegistrationEvent` events.
+Instead of `XStateDevInterface`, there is the `InspectorActorRef` which can receive `ActorTransition` or `ActorRegistrationEvent` events.
 
-- The `ActorEvent` event is sent to the inspector when an actor's state changes.
+- The `ActorTransition` event is sent to the inspector when an actor's state changes.
 - The `ActorRegistrationEvent` event is sent to the inspector when an actor is registered.
 
 **Messages**
@@ -112,7 +112,7 @@ interface XStateInspectActorsEvent {
       sessionId: string;
       parent?: string; // Session ID
       machine?: string; // JSON-stringified
-      events: ActorEvent[];
+      events: ActorTransition[];
       createdAt: number; // Timestamp
     }
   };
