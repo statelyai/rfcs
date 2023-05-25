@@ -51,6 +51,7 @@ interface ActorRegistrationEvent {
   actorRef: AnyActorRef;
   sessionId: string;
   parentId?: string;
+  systemId?: string;
   definition?: StateMachineDefinition;
   createdAt: string; // Timestamp
 }
