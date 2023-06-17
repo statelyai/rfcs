@@ -37,6 +37,7 @@ interface InspectedActorObject {
 }
 
 interface ActorTransitionEvent {
+  type: "@xstate.transition";
   id: string; // unique string for this actor update
   snapshot: any;
   event: AnyEventObject; // { type: string, ... }
