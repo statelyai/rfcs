@@ -49,6 +49,7 @@ interface ActorTransitionEvent {
 }
 
 interface ActorCommunicationEvent {
+  type: "@xstate.communication";
   id: string; // unique string for this event
   event: AnyEventObject; // { type: string, ... }
   sourceId?: string; // Session ID
