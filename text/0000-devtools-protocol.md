@@ -58,6 +58,7 @@ interface ActorCommunicationEvent {
 }
 
 interface ActorRegistrationEvent {
+  type: "@xstate.registration";
   actorRef: AnyActorRef;
   sessionId: string;
   parentId?: string;
