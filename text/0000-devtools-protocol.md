@@ -67,7 +67,7 @@ interface ActorRegistrationEvent {
   createdAt: string; // Timestamp
 }
 
-export type InspectorActorRef = ActorRef<ActorTransitionEvent | ActorRegistrationEvent>;
+export type InspectorActorRef = ActorRef<ActorTransitionEvent | ActorCommunicationEvent | ActorRegistrationEvent>;
 ```
 
 Differences from XState v4:
