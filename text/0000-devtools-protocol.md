@@ -42,7 +42,7 @@ interface ActorTransitionEvent {
   snapshot: any;
   event: AnyEventObject; // { type: string, ... }
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped
-  sessionId: string; 
+  actorId: string; 
   actorRef: AnyActorRef; // Only available locally
   sourceId?: string; // Session ID
   createdAt: string; // Timestamp
@@ -60,7 +60,7 @@ interface ActorCommunicationEvent {
 interface ActorRegistrationEvent {
   type: "@xstate.registration";
   actorRef: AnyActorRef;
-  sessionId: string;
+  actorId: string;
   parentId?: string;
   systemId?: string;
   definition?: string; // JSON-stringified definition or URL
