@@ -24,80 +24,58 @@ See the current protocol here: https://xstate.js.org/docs/packages/xstate-inspec
 `globalThis.__xstate__` is a global `XStateDevInterface` object:
 
 ```ts
-interface InspectedEventObject {
-  name: string; // Event type
-  data: AnyEventObject; // The actual event object
-  origin?: string; // Session ID
-  destination: string; // Session ID
-  createdAt: number; // Timestamp
-}
-
 interface InspectedActorObject {
-  actorRef: AnyActorRef;
+  actorRef: AnyActorRef; // local-only
   sessionId: string;
-  parent?: string; // Session ID
-  snapshot: any; 
-  machine?: StateMachineDefinition; // This is originally StateNodeDefinition (renaming)
-  events: InspectedEventObject[];
+  parentId?: string; // Session ID
+  systemId?: string; // Session ID
+  events: ActorCommunicationEvent[]; // events where targetId === sessionId
+  definition?: string; // JSON-stringified machine definition or URL
   createdAt: number; // Timestamp
-  updatedAt: number; // Timestamp
-  status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped
+  updatedAt: number; // Timestamp, derived from latest update createdAt
+  status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped, derived from latest update status
 }
 
-interface ActorUpdate {
-  sessionId: string;
-  actorRef: AnyActorRef;
+interface ActorTransitionEvent {
+  type: "@xstate.transition";
+  id: string; // unique string for this actor update
   snapshot: any;
-  event: InspectedEventObject;
+  event: AnyEventObject; // { type: string, ... }
   status: 0 | 1 | 2; // 0 = not started, 1 = started, 2 = stopped
+  actorId: string; 
+  actorRef: AnyActorRef; // Only available locally
+  sourceId?: string; // Session ID
+  createdAt: string; // Timestamp
 }
 
-interface ActorRegistration {
+interface ActorCommunicationEvent {
+  type: "@xstate.communication";
+  id: string; // unique string for this event
+  event: AnyEventObject; // { type: string, ... }
+  sourceId?: string; // Session ID
+  targetId: string; // Session ID, required
+  createdAt: string; // Timestamp
+}
+
+interface ActorRegistrationEvent {
+  type: "@xstate.registration";
   actorRef: AnyActorRef;
-  sessionId: string;
-  machine?: StateMachineDefinition;
-  createdAt: number;
+  actorId: string;
+  parentId?: string;
+  systemId?: string;
+  definition?: string; // JSON-stringified definition or URL
+  createdAt: string; // Timestamp
 }
 
-export interface XStateDevInterface {
-  register: (actorRef: AnyActorRef) => void;
-  unregister: (actorRef: AnyActorRef) => void;
-  onRegister: (
-    listener: (actorRegistration: ActorRegistration) => void
-  ) => Subscription;
-  actors: {
-    [sessionId: string]: InspectedActorObject;
-  };
-  onUpdate: (listener: (update: ActorUpdate) => void) => Subscription;
-}
+export type InspectorActorRef = ActorRef<ActorTransitionEvent | ActorCommunicationEvent | ActorRegistrationEvent>;
 ```
 
 Differences from XState v4:
 
-```diff
- export interface XStateDevInterface {
-   register: ...
-   unregister: ...
-   onRegister: () => ...
--  services: ...
-+  actors: { ... }
-+  onUpdate: { ... }
- }
-```
+Instead of `XStateDevInterface`, there is the `InspectorActorRef` which can receive `ActorTransitionEvent` or `ActorRegistrationEvent` events.
 
-- `onRegister()` provides listeners wtih `ActorRegistration` objects, which include:
-  - The `actorRef` reference to the actor
-  - The `sessionId` of the actor ref
-  - The `machine` JSON-serializable state machine definition if the actor was created from a machine
-  - The `createdAt` timestamp
-- `services` is removed and replaced by `actors`, which is a mapping of session IDs to `InspectedActorObject` objects and can be services from machines or other actors.
-- `InspectedEventObject` is introduced to include metadata about the event, such as its `origin` and timestamp (`createdAt`). This is similar to `SCXML.EventObject`.
-- `onUpdate()` provides listeners with `ActorUpdate` objects, which include:
-  - The `sessionId` of the updated actor
-  - The `actorRef` reference to the actor
-  - The `snapshot`, which is the latest observable state of the actor
-  - The `event` as an `InspectedEventObject` which caused the update
-  - The `status` of the actor: 0 = not started, 1 = started, 2 = stopped
+- The `ActorTransitionEvent` event is sent to the inspector when an actor's state changes.
+- The `ActorRegistrationEvent` event is sent to the inspector when an actor is registered.
 
 **Messages**
 
@@ -143,10 +121,10 @@ interface XStateInspectActorsEvent {
   actors: {
     [sessionId: string]: {
       sessionId: string;
-      parent?: string;
+      parent?: string; // Session ID
       machine?: string; // JSON-stringified
-      snapshot: string; // JSON-stringified
-      createdAt: number;
+      events: ActorTransitionEvent[];
+      createdAt: number; // Timestamp
     }
   };
 }
@@ -174,8 +152,8 @@ interface XStateInspectReadEvent {
 interface XStateInspectActorEvent {
   type: '@xstate/inspect.actor';
   sessionId: string;
-  machine?: string; // JSON-stringified machine definition
-  createdAt: number;
+  definition?: string; // JSON-stringified machine definition or URL
+  createdAt: string;
 }
 ```
 
@@ -190,25 +168,13 @@ interface XStateInspectUpdateEvent {
   type: '@xstate/inspect.update';
   sessionId: string;
   snapshot: string; // JSON-stringified snapshot
-  event: InspectedEventObject;
+  event: AnyEventObject; // JSON-stringified
+  sourceId?: string; // Session ID
   status: 0 | 1 | 2; // Actor status
 }
 ```
 
 When an actor's snapshot updates due to a state transition, the client is notified via an `'@xstate/inspect.update'` message. The status signifies whether the actor is not yet started, started, or stopped. The client may choose to perform some cleanup behavior when the actor stops.
-
------
-
-- **`@xstate/inspect.event`** (Inspector -> Client)
-
-```ts
-interface XStateInspectEventEvent {
-  type: '@xstate/inspect.event';
-  event: InspectedEventObject; // includes origin and destination
-}
-```
-
-When an actor sends a message to another actor, the client is notified via an `'@xstate/inspect.message'` event. The `event` should contain both the `origin` (if known) and the `destination` (required) as session IDs.
 
 -----
 
@@ -222,8 +188,6 @@ interface XStateInspectSendEvent {
   createdAt: number;
 }
 ```
-
-
 
 The client may send events directly to inspected actors.
 
